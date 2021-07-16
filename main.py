@@ -8,21 +8,26 @@ array_mic_num = 6
 array_mic_dis = 0.05
 mirror_mic_num = 6
 mirror_mic_dis = 0.05
-_, fs = librosa.load("1_array.wav", sr=None)
+fs = 16000
+
+
 def read_waves(type):
-    filepath = "."
-    filenames = os.listdir(filepath)
+    root = os.getcwd()
+    file_root = os.path.join(root, "wav")
+    files = os.listdir(file_root)
     wavelist = []
     x = []
-    for filename in filenames:
-        name, category = os.path.splitext(filepath + filename)
+    for file in files:
+        name, category = os.path.splitext(os.path.join(file_root, file))
         if type in name and category == '.wav':  
-            wavelist.append(filename)
+            wavelist.append(file)
     wavelist.sort(key=lambda x: int(x[0]))
-    print(wavelist)
+#    print(wavelist)
     for wav in wavelist:
-        x.append(librosa.load(wav, sr=None)[0])
+        x.append(librosa.load(os.path.join(file_root, wav), sr=None)[0])
     return x
+
+
 if __name__ == '__main__':
     x_array = np.array(read_waves("array"))
     das_srp.array_location(x_array.T, array_mic_num, array_mic_dis, voice_speed, fs)
